@@ -1,0 +1,8 @@
+
+var startConfig = () =>{
+
+}
+
+export {
+  startConfig
+}
