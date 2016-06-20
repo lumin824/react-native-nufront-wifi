@@ -1,8 +1,15 @@
+import {
+  NativeModules
+} from 'react-native';
 
-var startConfig = () =>{
+let { NfWifiModule } = NativeModules;
 
-}
+export var startConfig = () => {
+  console.log('startConfig');
+};
 
-export {
-  startConfig
-}
+export var stopConfig = () => {
+  console.log('stopConfig');
+};
+
+export var getSSID = NfWifiModule.getSSID;
