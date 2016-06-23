@@ -4,12 +4,8 @@ import {
 
 let { NfWifiModule } = NativeModules;
 
-export var startConfig = () => {
-  console.log('startConfig');
-};
+export var startConfig = NfWifiModule.startConfig
 
-export var stopConfig = () => {
-  console.log('stopConfig');
-};
+export var stopConfig = NfWifiModule.stopConfig
 
 export var getSSID = NfWifiModule.getSSID;
