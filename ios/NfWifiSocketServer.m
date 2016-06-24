@@ -28,13 +28,13 @@
     self._lock =[[NSLock alloc]init];
     self._isClosed = NO;
     self._socket = socket(AF_INET, SOCK_DGRAM, 0);
-      
+
     struct sockaddr_in server_addr;
     memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
     server_addr.sin_addr.s_addr = INADDR_ANY;
-        
+
     if(bind(self._socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
     {
       NSLog(@"bind error");
@@ -61,7 +61,7 @@
 -(NSData*) receiveSpecLenBytes: (int)len
 {
   ssize_t recvLen = recv(self._socket, _buffer, BUFFER_SIZE, 0);
-  if(recvLen == len) return [[NSData alloc]initWithBytes:_buffer length:recvLen];
+  if(recvLen >= len) return [[NSData alloc]initWithBytes:_buffer length:recvLen];
   return nil;
 }
 

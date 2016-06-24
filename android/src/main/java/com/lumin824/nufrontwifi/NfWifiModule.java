@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -44,7 +45,7 @@ public class NfWifiModule extends ReactContextBaseJavaModule {
   private NfWifiTask task;
 
   @ReactMethod
-  public void startConfig(String ssid, String key, final Callback callback) throws Exception{
+  public void startConfig(String ssid, String key, final String code, final Promise promise) throws Exception{
 
     if(task != null) stopConfig();
 
@@ -53,7 +54,11 @@ public class NfWifiModule extends ReactContextBaseJavaModule {
 
       @Override
       public void handleMessage(Message msg) {
-        callback.invoke(msg.obj.toString());
+        String newCode = msg.obj.toString();
+        if(code == null || newCode.equals(code)){
+          promise.resolve(msg.obj.toString());
+          stopConfig();
+        }
       }
     });
 
@@ -66,5 +71,10 @@ public class NfWifiModule extends ReactContextBaseJavaModule {
       task.stop();
       task = null;
     }
+  }
+
+  @Override
+  public void onCatalystInstanceDestroy() {
+    stopConfig();
   }
 }

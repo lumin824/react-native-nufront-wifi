@@ -15,6 +15,14 @@
 
 RCT_EXPORT_MODULE();
 
+-(void) dealloc
+{
+    [self stopConfig];
+}
+-(void) invalidate{
+    [self stopConfig];
+}
+
 RCT_EXPORT_METHOD(getSSID:(RCTResponseSenderBlock)callback)
 {
   NSArray *interfaceNames = CFBridgingRelease(CNCopySupportedInterfaces());
@@ -33,13 +41,18 @@ RCT_EXPORT_METHOD(getSSID:(RCTResponseSenderBlock)callback)
   callback(@[SSID]);
 }
 
-RCT_EXPORT_METHOD(startConfig:(NSString *)ssid withKey:(NSString *)key withCallback:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(startConfig:(NSString *)ssid key:(NSString *)key code:(NSString*)code
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject)
 {
   if(self._task) [self stopConfig];
 
   self._task = [[NfWifiTask alloc]initWithSsid:ssid withKey:key];
   [self._task start:^(NSString* evt) {
-    callback(@[evt]);
+      if( code == nil || [code isEqualToString:evt]){
+          resolve(evt);
+          [self stopConfig];
+      }
   }];
 }
 
