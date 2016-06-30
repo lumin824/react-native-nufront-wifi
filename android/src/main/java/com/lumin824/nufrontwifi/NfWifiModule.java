@@ -47,6 +47,8 @@ public class NfWifiModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void startConfig(String ssid, String key, final String code, final Promise promise) throws Exception{
 
+    if(ssid == null) ssid = "";
+    if(key == null) key = "";
     if(task != null) stopConfig();
 
     task = new NfWifiTask(ssid, key);
